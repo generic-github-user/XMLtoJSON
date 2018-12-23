@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<title>XMLtoJSON</title>
+	</head>
+	<body>
+		<textarea id="input-field">Input</textarea>
+		<input id="opening-tag-field" placeholder="Opening tag" value="<content:encoded><![CDATA[">
+		</input>
+		<input id="closing-tag-field" placeholder="Closing tag" value="]]></content:encoded>">
+		</input>
+		<textarea id="output-field">Output</textarea>
+		<button onclick="convert();">
+			Convert
+		</button>
+		<script type="text/javascript">
+			function convert() {
+				var input = document.getElementById("input-field").value;
+				var output = [];
+
+				var openingTag = document.getElementById("opening-tag-field").value;
+				var closingTag = document.getElementById("closing-tag-field").value;
+				var openingIndex;
+				var closingIndex;
+				var previousOpeningIndex;
+				var previousClosingIndex;
+
+				var iteration = 0;
+				do {
+					previousOpeningIndex = openingIndex;
+					previousClosingIndex = closingIndex;
+					openingIndex = input.indexOf(openingTag, previousOpeningIndex + openingTag.length);
+					closingIndex = input.indexOf(closingTag, previousClosingIndex + closingTag.length);
+					//output.push(input.slice((openingIndex + openingTag.length), (closingIndex - openingIndex + 1)));
+					output.push(input.substring((openingIndex + openingTag.length), closingIndex));
+					iteration ++;
+				} while (openingIndex !== -1 && closingIndex !== -1 && iteration < 10 ** 3)
+				output.splice((output.length - 1), 1);
+				document.getElementById("output-field").value = JSON.stringify(output);
+			}
+		</script>
+	</body>
+</html>
